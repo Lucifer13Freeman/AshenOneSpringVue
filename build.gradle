@@ -1,0 +1,48 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.3'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'eclipse'
+	id "com.github.node-gradle.node" version "3.1.1"
+}
+
+group = 'com.ashenone'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+node { download = true }
+
+task buildClient(type: YarnTask) {
+	args = ['build']
+}
+
+yarn_install.dependsOn(yarn_cache_clean)
+buildClient.dependsOn(yarn_install)
+processResources.dependsOn(buildClient)
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.postgresql:postgresql'
+	implementation 'org.projectlombok:lombok'
+	annotationProcessor ('org.projectlombok:lombok')
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.1.9.RELEASE'
+//	implementation 'org.springframework.session:spring-session-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.jsoup:jsoup:1.14.3'
+	implementation 'io.sentry:sentry-spring-boot-starter:5.6.1'
+	implementation 'io.sentry:sentry-logback:5.6.1'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
